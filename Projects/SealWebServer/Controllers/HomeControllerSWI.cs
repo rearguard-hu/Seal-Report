@@ -738,7 +738,7 @@ namespace SealWebServer.Controllers
                 //SignOut
                 if (AuthenticationConfig.Enabled)
                 {
-                    SignOut("Cookies", "oidc");
+                   return SignOut("Cookies", "oidc");
                 }
 
                 return Json(new { });

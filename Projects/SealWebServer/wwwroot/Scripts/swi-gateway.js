@@ -27,6 +27,9 @@ var SWIGateway = /** @class */ (function () {
             .done(function (data) { callbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     };
+    SWIGateway.prototype.LoginView = function () {
+        window.location.href = _server + "Login";
+    };
     SWIGateway.prototype.Login = function (user, password, callback, errorcb) {
         $.post(_server + "SWILogin", {
             user: user, password: password

@@ -31,6 +31,10 @@ class SWIGateway {
             .fail(function (xhr, status, error) { failure(xhr, status, error); });
     }
 
+    public LoginView() {
+        window.location.href = _server + "Login";
+    }
+
     public Login(user: string, password: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWILogin", {
             user: user, password: password
