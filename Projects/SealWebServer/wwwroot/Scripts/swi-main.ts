@@ -25,7 +25,6 @@ declare function redrawDataTables();
 declare function initScrollReport();
 
 $(document).ready(function () {
-    debugger;
     _gateway = new SWIGateway();
 
     _main = new SWIMain();
@@ -80,7 +79,6 @@ class SWIMain {
         _gateway.GetUserProfile(
             function (data) {
                 if (data.autenticated) {
-                    debugger;
                     //User already connected
                     _main.loginSuccess(data);
                 }
@@ -552,7 +550,6 @@ class SWIMain {
     }
 
     private showLogin() {
-        debugger;
         _gateway.LoginView();
         //$("body").children(".modal-backdrop").remove();
         //$("#footer-div").show();

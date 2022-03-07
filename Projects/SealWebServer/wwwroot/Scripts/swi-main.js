@@ -13,7 +13,6 @@ var _gateway;
 var _main;
 var _editor;
 $(document).ready(function () {
-    debugger;
     _gateway = new SWIGateway();
     _main = new SWIMain();
     _main.Process();
@@ -56,7 +55,6 @@ var SWIMain = /** @class */ (function () {
         });
         _gateway.GetUserProfile(function (data) {
             if (data.autenticated) {
-                debugger;
                 //User already connected
                 _main.loginSuccess(data);
             }
@@ -487,7 +485,6 @@ var SWIMain = /** @class */ (function () {
         _main.enableControls();
     };
     SWIMain.prototype.showLogin = function () {
-        debugger;
         _gateway.LoginView();
         //$("body").children(".modal-backdrop").remove();
         //$("#footer-div").show();
