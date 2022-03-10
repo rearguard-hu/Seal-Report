@@ -14,6 +14,8 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	  <AssemblyVersion>6.5.1.0</AssemblyVersion>
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
