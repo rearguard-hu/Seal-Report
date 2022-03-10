@@ -62,6 +62,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="RazorEngine.NetCore.ZuLiang" Version="2.2.3.6" />
+    <PackageReference Include="ZR.Helper" Version="3.0.0.7" />
   </ItemGroup>
 
   <ItemGroup>

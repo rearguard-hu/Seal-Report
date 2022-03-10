@@ -78,13 +78,18 @@ class SWIMain {
 
         _gateway.GetUserProfile(
             function (data) {
-                if (data.autenticated) {
+                if (data.authenticated) {
                     //User already connected
-                    _main.loginSuccess(data);
+                    //_main.loginSuccess(data);
+                    _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
                 }
                 else {
+
+                    _gateway.Logout(function () {});
                     //Try to login without authentication
                     _gateway.Login("", "", function (data) { _main.loginSuccess(data) }, function (data) { _main.loginFailure(data, true) });
+
+
                 }
             }
         );

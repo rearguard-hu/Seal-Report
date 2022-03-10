@@ -1,67 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SealSecurity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProviderName>No Security</ProviderName>
-  <Script>@{
+  <ProviderName>OpenId</ProviderName>
+  <Script>@using System.IdentityModel.Tokens.Jwt;
+@{
+    //Sample of authentication from a JWT token
     SecurityUser user = Model;
-	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
-	//user.WebUserName -&gt; user name from the login screen
-	//user.WebPassword -&gt; password from the login screen
-	user.Name = user.WebUserName; //Display name
-    //security check can be hardcoded
-	if (string.IsNullOrEmpty(user.WebUserName)) {
-		user.AddDefaultSecurityGroup();
-	}
-	else if (user.WebUserName == "ex" &amp;&amp; user.WebPassword == "ex")
-	{
-		user.AddSecurityGroup("Group (Execute)");
-	}
-	else if (user.WebUserName == "exo" &amp;&amp; user.WebPassword == "exo")
-	{
-		user.AddSecurityGroup("Group (Execute Output)");
-	}
-	else if (user.WebUserName == "sc" &amp;&amp; user.WebPassword == "sc")
-	{
-		user.AddSecurityGroup("Group (Schedule)");
-	}
-	else if (user.WebUserName == "ed" &amp;&amp; user.WebPassword == "ed")
-	{
-		user.AddSecurityGroup("Group (Edit)");
-	}
-	else if (user.WebUserName == "exed" &amp;&amp; user.WebPassword == "exed")
-	{
-		user.AddSecurityGroup("Group (Execute)");
-		user.AddSecurityGroup("Group (Edit)");
-	}
-	else if (user.WebUserName == "sc1" &amp;&amp; user.WebPassword == "sc1")
-	{
-		user.AddSecurityGroup("Group (Scripts 1)");
-	}
-	else if (user.WebUserName == "sc2" &amp;&amp; user.WebPassword == "sc2")
-	{
-		user.AddSecurityGroup("Group (Scripts 1)");
-		user.AddSecurityGroup("Group (Scripts 2)");
-	}
-	else if (user.WebUserName == "menu" &amp;&amp; user.WebPassword == "menu")
-	{
-		user.AddSecurityGroup("Group (Menu)");
-	}
-	else if (user.WebUserName == "demo" &amp;&amp; user.WebPassword == "demo")
-	{
-		user.AddSecurityGroup("Group (Demo)");
-	}
-	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")
-	{
-        throw new Exception("This user has no group");
-	}
-	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")
-	{
-        user.Name = "Benjaminto Seal";
-		user.AddDefaultSecurityGroup();
-        var imagePath = @"C:\temp\" + user.WebUserName + ".png";
-        if (System.IO.File.Exists(imagePath)) {
-            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);
-        }
-	}
+    var idToken = user.Token; //Token got from SWILogin parameter
+    
+  if (!string.IsNullOrEmpty(idToken)) {  
+  
+    var handler = new JwtSecurityTokenHandler();
+        var payload = handler.ReadJwtToken(idToken).Payload;
+        var expclaim = payload.Claims.FirstOrDefault(x =&gt; x.Type == "exp");
+        var foo = DateTime.UtcNow;
+        var unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+        var dateTime = long.Parse(expclaim.Value);
+    // Validating the token expiration
+    if(unixTime &gt; dateTime) {
+      user.Error = "Token Expired";
+    }
+    else {
+      // Inserting data from the token payload
+      var nickname = payload.Claims.FirstOrDefault(x =&gt; x.Type == "nickname");
+            user.Name = nickname.Value;
+            var roleclaim = payload.Claims.FirstOrDefault(x =&gt; x.Type == "roleName")?.Value;
+            
+            var dicRule = roleclaim.Split(',');
+            foreach (var item in dicRule)
+            {
+                    user.AddSecurityGroup(item);
+            }
+    }
+  }
+  else {
+    //No token, an alternate authentication can be done here (just copy code from the other security providers...)
+    if (user.WebUserName == "userName" &amp;&amp; user.WebPassword == "password")
+    {
+      user.AddDefaultSecurityGroup();
+      //user.AddSecurityGroup(""aGroupName"");
+    }
+    else {
+      throw new Exception("Invalid user name or password");
+    }    
+  }
 }</Script>
   <Groups>
     <SecurityGroup>
