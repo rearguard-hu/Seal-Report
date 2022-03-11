@@ -14,7 +14,6 @@
 _ed.dataTables.editor.min.js
 _ed.editor.bootstrap.min.js</ScriptFiles>
   <TaskFolderName>Seal Report</TaskFolderName>
-  <AuditEnabled>true</AuditEnabled>
   <AuditScript />
   <WebSessionInitScript />
   <InitScript />
