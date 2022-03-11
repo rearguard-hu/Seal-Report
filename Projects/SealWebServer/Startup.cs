@@ -87,7 +87,7 @@ namespace SealWebServer
             }
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.ForwardedHeaders = ForwardedHeaders.All;
             });
             services
                 .AddControllersWithViews()
@@ -119,12 +119,14 @@ namespace SealWebServer
                     ForwardedHeaders = ForwardedHeaders.All
                 });
             }
-
-            app.Use((context, next) =>
+            if (!env.IsProduction())
             {
-                context.Request.Scheme = "https";
-                return next();
-            });
+                app.Use((context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+            }
 
             app.UseForwardedHeaders();
 
