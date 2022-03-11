@@ -67,6 +67,7 @@ namespace SealWebServer
                     {
                         options.DefaultScheme = "Cookies";
                         options.DefaultChallengeScheme = "oidc";
+                        options.RequireAuthenticatedSignIn=true;
                     })
                     .AddCookie("Cookies")
                     .AddOpenIdConnect("oidc", options =>
@@ -74,18 +75,20 @@ namespace SealWebServer
                         options.SignInScheme = "Cookies";
                         options.Authority = authentication.Id4EndPoint;//Authorized Service Center
                         //The token holds the identity
-                        options.CallbackPath = authentication.CallbackPath;
                         options.SaveTokens = true;
                         options.RequireHttpsMetadata = true;
                         options.ClientId = authentication.ClientId;//Authorization service assignment ClientId
                         options.ClientSecret = authentication.AccessKeySecret;
-                        options.ResponseType = "code";
+                        options.ResponseType = authentication.ResponseType;
                         options.Scope.Clear();
                         options.Scope.Add("openid");
                         options.Scope.Add("profile");
                     });
             }
-
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -117,6 +120,14 @@ namespace SealWebServer
                 });
             }
 
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = "https";
+                return next();
+            });
+
+            app.UseForwardedHeaders();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
@@ -133,9 +144,6 @@ namespace SealWebServer
                     pattern: "{action=Main}",
                     new { controller = "Home", action = "Main" });
 
-                endpoints.MapControllerRoute(
-                    name: "mvc",
-                    pattern: "{controller=Home}/{action=Main}");
             });
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 
