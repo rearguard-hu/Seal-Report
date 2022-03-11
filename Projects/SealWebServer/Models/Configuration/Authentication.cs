@@ -8,6 +8,16 @@
         public string Name { get; set; }
 
         /// <summary>
+        /// The callback address
+        /// </summary>
+        public string CallbackPath { get; set; }
+
+        /// <summary>
+        /// Scope
+        /// </summary>
+        public string Scope { get; set; }
+
+        /// <summary>
         /// Whether to enable the configuration
         /// </summary>
         public bool Enabled { get; set; }

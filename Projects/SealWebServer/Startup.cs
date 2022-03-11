@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +74,7 @@ namespace SealWebServer
                         options.SignInScheme = "Cookies";
                         options.Authority = authentication.Id4EndPoint;//Authorized Service Center
                         //The token holds the identity
+                        options.CallbackPath = authentication.CallbackPath;
                         options.SaveTokens = true;
                         options.RequireHttpsMetadata = true;
                         options.ClientId = authentication.ClientId;//Authorization service assignment ClientId
@@ -83,7 +85,7 @@ namespace SealWebServer
                         options.Scope.Add("profile");
                     });
             }
-            
+
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
