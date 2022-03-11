@@ -74,7 +74,7 @@ namespace SealWebServer
                         options.Authority = authentication.Id4EndPoint;//Authorized Service Center
                         //The token holds the identity
                         options.SaveTokens = true;
-                        options.RequireHttpsMetadata = false;
+                        options.RequireHttpsMetadata = true;
                         options.ClientId = authentication.ClientId;//Authorization service assignment ClientId
                         options.ClientSecret = authentication.AccessKeySecret;
                         options.ResponseType = "code";
